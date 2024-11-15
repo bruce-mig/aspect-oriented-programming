@@ -1,5 +1,6 @@
 package com.github.bruce_mig.aspect_oriented_programming.serviceImpl;
 
+import com.github.bruce_mig.aspect_oriented_programming.annotations.SensitiveMethod;
 import com.github.bruce_mig.aspect_oriented_programming.model.User;
 import com.github.bruce_mig.aspect_oriented_programming.repository.UserRepository;
 import com.github.bruce_mig.aspect_oriented_programming.service.UserService;
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
+    @SensitiveMethod
     public User createUser(User user) {
         return repository.save(user);
     }
