@@ -15,7 +15,7 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAspect {
 
-    @Before(
+    /*@Before(
             value = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.inWebLayer()"
     )
     public void logWebBefore(JoinPoint joinPoint){
@@ -38,7 +38,8 @@ public class LoggingAspect {
     public void logWebAfterThrowing(JoinPoint joinPoint, Throwable exception) {
         String methodName = joinPoint.getSignature().getName();
         log.info("Controller method: " + methodName + " threw exception:" + exception);
-    }
+    }*/
+// =====================================
 
     @Before(
             value = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.serviceLayerExcludingSensitive()"
@@ -46,7 +47,7 @@ public class LoggingAspect {
     public void logServiceBefore(JoinPoint joinPoint){
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        log.info("Executing service method: {}, with arguments: {}", methodName, Arrays.toString(args) );
+        log.info("[x] Executing service method: {}, with arguments: {}", methodName, Arrays.toString(args));
     }
 
     @AfterReturning(
@@ -54,7 +55,7 @@ public class LoggingAspect {
             returning = "result")
     public void logServiceAfterReturning(JoinPoint joinPoint, Object result) {
         String methodName = joinPoint.getSignature().getName();
-        log.info("Service method: {} executed successfully. Result: {}", methodName, result);
+        log.info("[.] Service method: {} executed successfully. Result: {}", methodName, result);
     }
 
     @AfterThrowing(
@@ -62,23 +63,39 @@ public class LoggingAspect {
             throwing = "exception")
     public void logServiceAfterThrowing(JoinPoint joinPoint, Throwable exception) {
         String methodName = joinPoint.getSignature().getName();
-        log.info("Service method: " + methodName + " threw exception:" + exception);
+        log.info("[-] Service method: " + methodName + " threw exception:" + exception);
+    }
+
+    // Custom logging advice for sensitive methods
+    @Before("com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.sensitiveMethod()")
+    public void logSensitiveMethod(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        log.info("[.] Executing sensitive method: {}. Arguments are hidden for security reasons.", methodName);
     }
 
     @Before(
-            value = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.sensitiveCreateUserMethod()"
+            value = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.webLayerExcludingSensitive()"
     )
-    public void logSensitiveServiceBefore(JoinPoint joinPoint){
+    public void logWebBefore(JoinPoint joinPoint){
         String methodName = joinPoint.getSignature().getName();
-        log.info("Executing sensitive service method: {}", methodName);
+        Object[] args = joinPoint.getArgs();
+        log.info("[x] Executing Controller method: {}, with arguments: {}", methodName, Arrays.toString(args) );
     }
 
     @AfterReturning(
-            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.sensitiveCreateUserMethod()"
-    )
-    public void logSensitiveServiceAfterReturning(JoinPoint joinPoint) {
+            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.webLayerExcludingSensitive()",
+            returning = "result")
+    public void logWebAfterReturning(JoinPoint joinPoint, Object result) {
         String methodName = joinPoint.getSignature().getName();
-        log.info("Sensitive service method: {} executed successfully.", methodName);
+        log.info("[.] Controller  method: {} executed successfully. Result: {}", methodName, result);
+    }
+
+    @AfterThrowing(
+            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.methodsInUserController()",
+            throwing = "exception")
+    public void logControllerAfterThrowing(JoinPoint joinPoint, Throwable exception) {
+        String methodName = joinPoint.getSignature().getName();
+        log.info("[-] Controller method: " + methodName + " threw exception:" + exception);
     }
 
 }
