@@ -1,5 +1,6 @@
 package com.github.bruce_mig.aspect_oriented_programming.controller;
 
+import com.github.bruce_mig.aspect_oriented_programming.annotations.SensitiveMethod;
 import com.github.bruce_mig.aspect_oriented_programming.model.User;
 import com.github.bruce_mig.aspect_oriented_programming.serviceImpl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserController {
     }
 
     @PostMapping
+    @SensitiveMethod
     public ResponseEntity<User> create(@RequestBody User user) {
         User savedUser = service.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
