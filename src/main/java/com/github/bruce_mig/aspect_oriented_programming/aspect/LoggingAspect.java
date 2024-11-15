@@ -58,10 +58,27 @@ public class LoggingAspect {
     }
 
     @AfterThrowing(
-            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.serviceLayerExcludingSensitive()",
+            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.methodsInServiceInterface()",
             throwing = "exception")
     public void logServiceAfterThrowing(JoinPoint joinPoint, Throwable exception) {
         String methodName = joinPoint.getSignature().getName();
         log.info("Service method: " + methodName + " threw exception:" + exception);
     }
+
+    @Before(
+            value = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.sensitiveCreateUserMethod()"
+    )
+    public void logSensitiveServiceBefore(JoinPoint joinPoint){
+        String methodName = joinPoint.getSignature().getName();
+        log.info("Executing sensitive service method: {}", methodName);
+    }
+
+    @AfterReturning(
+            pointcut = "com.github.bruce_mig.aspect_oriented_programming.aspect.CommonPointCuts.sensitiveCreateUserMethod()"
+    )
+    public void logSensitiveServiceAfterReturning(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        log.info("Sensitive service method: {} executed successfully.", methodName);
+    }
+
 }
