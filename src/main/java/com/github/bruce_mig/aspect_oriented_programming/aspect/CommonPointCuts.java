@@ -18,7 +18,7 @@ public class CommonPointCuts {
      * in a type in the com.github.bruce_mig.aspect_oriented_programming.service package or any sub-package
      * under that.
      */
-    @Pointcut("within(com.github.bruce_mig.aspect_oriented_programming.service..*)")
+    @Pointcut("execution(* com.github.bruce_mig.aspect_oriented_programming.service..*.*(..))")
     public void inServiceLayer() {}
 
     /**
